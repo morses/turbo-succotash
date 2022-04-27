@@ -16,12 +16,14 @@ env:
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
-  # This workflow contains a single job called "build"
-  build:
+  # This workflow contains multiple jobs.  All are executed on the same virtual machine
+  build_job:
+    name: Build all .NET projects
     # The type of runner that the job will run on
     runs-on: ubuntu-latest
 
     # Steps represent a sequence of tasks that will be executed as part of the job
+    # They are executed in order
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v2
@@ -42,8 +44,12 @@ jobs:
         run: |
           dotnet restore
           dotnet build 
-      
+  # Run unit tests in a separate job, that is dependent on the build job
+  unit_tests_job:
+    name: Run all C# unit tests
+    needs: build_job
+    steps:
       # Test the selected project
-      - name: Test project
+      - name: Run unit tests on the main project
         working-directory: ${{ env.PROJECT_PATH }}
         run: dotnet test --no-restore --no-build ${{ env.PROJECT_NAME }}
