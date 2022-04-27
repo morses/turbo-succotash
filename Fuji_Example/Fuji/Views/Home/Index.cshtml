@@ -1,0 +1,44 @@
+﻿@model MainPageVM
+@using Microsoft.AspNetCore.Identity
+@inject SignInManager<IdentityUser> SignInManager
+
+@{
+    ViewData["Title"] = "Home Page";
+}
+
+<div class="text-center">
+    <h1 id="title" class="display-4">Apples!</h1>
+    <p>Example used for adding to our unit testing capabilities.</p>
+</div>
+
+@if (SignInManager.IsSignedIn(User) && Model.HasFujiUser)
+{
+    <div class="row">
+        <div class="col">
+            <h2>How many Apples have you eaten today @Model.FirstName @Model.LastName ? </h2>
+            <p>Click on each apple to indicate you ate one today</p>
+            <div class="list-group" id="listOfApples">
+                @foreach (Apple a in Model.AllPossibleApples)
+                {
+                    // We'll set up a javascript listener on these buttons to send an AJAX message to our controller
+                    var appleID = "a" + a.Id;
+                    <button type="button" id="@appleID" class="list-group-item list-group-item-action">@a.VarietyName (@a.ScientificName)</button>
+                }
+            </div>
+            <p id="appleTotals"></p>
+            <p>Total Consumed in entire db = @Model.TotalApplesConsumedByAllUsers</p>
+        </div>
+    </div>
+}
+
+<p id="sum"></p>
+
+@*
+    Move our button listeners and ajax code to a separate javascript file that we
+    can load on this page only.  Site.js isn't the best location for it since that
+    is loaded on every page by default.
+*@
+
+@section Scripts {
+    <script type="text/javascript" src="~/js/eatApples.js"></script>
+}

@@ -1,0 +1,17 @@
+{
+  "name": "fuji_jstests",
+  "version": "1.0.0",
+  "description": "Javascript unit testing project for our main project",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "test": "jest"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@babel/preset-env": "^7.16.11",
+    "babel-jest": "^27.5.1",
+    "jest": "^27.5.1"
+  }
+}
