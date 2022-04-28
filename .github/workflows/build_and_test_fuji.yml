@@ -44,11 +44,9 @@ jobs:
 
       # confirm we can access secrets within an environment
       - name: echo a secret
-        with:
-          env:
-            SUPER_SECRET: ${{ secrets.A_SECRET }}
+        env:
+          SUPER_SECRET: ${{ secrets.A_SECRET }}
         run: echo "$SUPER_SECRET"
-        if: ${{always()}}
         
       # Build the selected project
       - name: Build project
