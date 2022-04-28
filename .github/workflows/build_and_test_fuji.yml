@@ -13,12 +13,14 @@ env:
   PROJECT_PATH: './Fuji_Example'
   PROJECT_NAME: 'Fuji_Tests'
   JS_PROJECT_NAME: 'Fuji_JSTests'
+  TEST_FILENAME: 'NUnitTestResults.md'
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
-  # This workflow contains multiple jobs.  All are executed on the same virtual machine
-  build_job:
-    name: Build all .NET projects
+  # This workflow contains one job.  You can easily have multiple jobs but they run in separate virtual
+  # machines and don't share an environment, so it's harder to split up things into say, build and test jobs
+  build_and_test:
+    name: Build all .NET projects then run tests
     # The type of runner that the job will run on
     runs-on: ubuntu-latest
 
@@ -43,14 +45,18 @@ jobs:
         working-directory: ${{ env.PROJECT_PATH }}
         run: |
           dotnet restore
-          dotnet build 
-  # Run unit tests in a separate job, that is dependent on the build job
-  unit_tests_job:
-    name: Run all C# unit tests
-    runs-on: ubuntu-latest
-    needs: build_job
-    steps:
+          dotnet build
+
       # Test the selected project
       - name: Run unit tests on the main project
         working-directory: ${{ env.PROJECT_PATH }}
-        run: dotnet test --no-restore --no-build ${{ env.PROJECT_NAME }}
+        run: dotnet test --no-restore --no-build ${{ env.PROJECT_NAME }} --logger:"liquid.md;LogFileName=${{github.workspace}}/${{env.TEST_FILENAME}};"
+      
+      # upload test report as build artifact
+      - name: Upload test report as build artifact
+        uses: actions/upload-artifact@v3
+        # Use always() to always run this step to publish test results even when there are test failures
+        if: ${{always()}}
+        with:
+          name: 'NUnit test run'
+          path: ${{github.workspace}}/${{env.TEST_FILENAME}}
