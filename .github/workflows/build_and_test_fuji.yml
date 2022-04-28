@@ -1,4 +1,4 @@
-name: Build and run unit tests on selected project
+name: Build and run unit tests on Fuji project
 
 # run upon a push to the integration branch 
 on:
@@ -23,6 +23,10 @@ jobs:
     name: Build all .NET projects then run tests
     # The type of runner that the job will run on
     runs-on: ubuntu-latest
+    permissions:
+      issues: write
+      pull-requests: write
+      contents: write
 
     # Steps represent a sequence of tasks that will be executed as part of the job
     # They are executed in order
