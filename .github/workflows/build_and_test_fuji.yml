@@ -74,3 +74,4 @@ jobs:
           name: See NUnit Tests       # Name of the check run which will be created
           path: ${{github.workspace}}/${{env.TEST_FILENAME}}    # Path to test results
           reporter: dotnet-trx        # Format of test results
+          token: ${{ secrets.TOKEN }}
