@@ -41,6 +41,11 @@ jobs:
       # Runs a single command using the runners shell (just as an example that we can do anything the shell can do)
       - name: Run a one-line script
         run: echo Hello, world!
+
+      # confirm we can access secrets within an environment
+      - name: echo a secret
+        run: echo ${{ secrets.A_SECRET }}
+        if: ${{always()}}
         
       # Build the selected project
       - name: Build project
@@ -55,21 +60,13 @@ jobs:
         run: dotnet test --no-restore --no-build ${{ env.PROJECT_NAME }} --logger:"trx;LogFileName=${{github.workspace}}/${{env.TEST_FILENAME}};"
       
       # upload test report as build artifact (unfortunately it doesn't display it nicely)
-    #  - name: Upload test report as build artifact
-    #    uses: actions/upload-artifact@v3
-    #    # Use always() to always run this step to publish test results even when there are test failures
-    #    if: ${{always()}}
-    #    with:
-    #      name: 'NUnit test run'
-    #      path: ${{github.workspace}}/${{env.TEST_FILENAME}}
-      
-      # try out a community developed version that makes it easier to view test results on GitHub
-      # https://github.com/marketplace/actions/test-reporter
-      - name: View Test Report
-        uses: dorny/test-reporter@v1
-        if: success() || failure()    # run this step even if previous step failed
+      - name: Upload test report as build artifact
+        uses: actions/upload-artifact@v3
+        # Use always() to always run this step to publish test results even when there are test failures
+        if: ${{always()}}
         with:
-          name: See NUnit Tests       # Name of the check run which will be created
-          path: ${{github.workspace}}/${{env.TEST_FILENAME}}    # Path to test results
-          reporter: dotnet-trx        # Format of test results
-          token: ${{ secrets.TOKEN }}
+          name: 'NUnit test run'
+          path: ${{github.workspace}}/${{env.TEST_FILENAME}}
+      
+      
+      
