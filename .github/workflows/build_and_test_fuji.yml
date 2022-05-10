@@ -73,6 +73,6 @@ jobs:
       
       # Deploy databases to Azure
       - name: Run deploytool to create databases on Azure
-        working-directory: $GITHUB_WORKSPACE/scripts
+        working-directory: ${{ env.PROJECT_PATH }}/scripts
         run: python deploytool.py --dry-run $HOME/secrets/config.json $DEPLOYMENT_RESOURCE_GROUP_NAME create-db
       
