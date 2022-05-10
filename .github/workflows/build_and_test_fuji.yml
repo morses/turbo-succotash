@@ -45,7 +45,7 @@ jobs:
           CONFIG_SECRET: ${{ secrets.CONFIG_SECRET }}
         run: |
           mkdir $HOME/secrets
-          gpg --quiet --batch --yes --decrypt --passphrase="$CONFIG_SECRET" --output $HOME/secrets/config.json $GITHUB_WORKSPACE/config/config.json.gpg
+          gpg --quiet --batch --yes --decrypt --passphrase="$CONFIG_SECRET" --output $HOME/secrets/config.json config/config.json.gpg
 
       - name: Test printing your secret file (remove this step in production)
         run: cat $HOME/secrets/config.json
@@ -73,6 +73,6 @@ jobs:
       
       # Deploy databases to Azure
       - name: Run deploytool to create databases on Azure
-        working-directory: ${{ env.PROJECT_PATH }}/scripts
+        working-directory: scripts
         run: python deploytool.py --dry-run $HOME/secrets/config.json $DEPLOYMENT_RESOURCE_GROUP_NAME create-db
       
