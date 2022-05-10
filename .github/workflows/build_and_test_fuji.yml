@@ -71,8 +71,24 @@ jobs:
       #     name: 'NUnit test run'
       #     path: ${{github.workspace}}/${{env.TEST_FILENAME}}
       
+      # - name: Azure CLI login
+      #   uses: azure/login@v1
+      #   with:
+      #     creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+      - name: Setup python and Azure CLI so we can run our deploy scripts
+        uses: azure/CLI@v1
+        uses: actions/setup-python@v3
+        working-directory: scripts
+        with:
+          python-version: '3.10'
+          cache: 'pip'
+        run: pip install -r requirements.txt
+
+
       # Deploy databases to Azure
       - name: Run deploytool to create databases on Azure
+        uses: azure/CLI@v1
         working-directory: scripts
         run: python deploytool.py --dry-run $HOME/secrets/config.json $DEPLOYMENT_RESOURCE_GROUP_NAME create-db
       

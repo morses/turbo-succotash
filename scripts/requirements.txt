@@ -1,0 +1,4 @@
+click
+azure-cli
+requests
+pyodbc
