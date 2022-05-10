@@ -43,7 +43,7 @@ jobs:
       - name: decrypt deployment config file
         env:
           CONFIG_SECRET: ${{ secrets.CONFIG_SECRET }}
-        run: ./.github/scripts/decrypt_secret.sh
+        run: sh $GITHUB_WORKSPACE/scripts/decrypt_secret.sh
 
       - name: Test printing your secret file (remove this step in production)
         run: cat $HOME/secrets/config.json
