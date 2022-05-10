@@ -14,7 +14,7 @@ env:
   PROJECT_NAME: 'Fuji_Tests'
   JS_PROJECT_NAME: 'Fuji_JSTests'
   TEST_FILENAME: 'NUnitTestResults.md'
-  RANDOM_VARIABLE: 'adslkfjaslkfj'
+  DEPLOYMENT_RESOURCE_GROUP_NAME: 'AutomationTest'
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
@@ -71,5 +71,8 @@ jobs:
       #     name: 'NUnit test run'
       #     path: ${{github.workspace}}/${{env.TEST_FILENAME}}
       
-      
+      # Deploy databases to Azure
+      - name: Run deploytool to create databases on Azure
+        working-directory: $GITHUB_WORKSPACE/scripts
+        run: python deploytool.py --dry-run $HOME/secrets/config.json $DEPLOYMENT_RESOURCE_GROUP_NAME create-db
       
