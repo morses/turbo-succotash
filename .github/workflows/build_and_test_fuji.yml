@@ -39,36 +39,35 @@ jobs:
         with:
           dotnet-version: ${{ env.DOTNET_VERSION }} 
 
-      # Runs a single command using the runners shell (just as an example that we can do anything the shell can do)
-      - name: Run a one-line script
-        run: echo Hello, world!
-
       # confirm we can access secrets within an environment
-      - name: echo a secret
+      - name: decrypt deployment config file
         env:
-          SUPER_SECRET: ${{ secrets.A_SECRET }}
-        run: echo "$SUPER_SECRET"
+          CONFIG_SECRET: ${{ secrets.CONFIG_SECRET }}
+        run: ./.github/scripts/decrypt_secret.sh
+
+      - name: Test printing your secret file (remove this step in production)
+        run: cat $HOME/secrets/config.json
         
       # Build the selected project
-      - name: Build project
-        working-directory: ${{ env.PROJECT_PATH }}
-        run: |
-          dotnet restore
-          dotnet build
+      # - name: Build project
+      #   working-directory: ${{ env.PROJECT_PATH }}
+      #   run: |
+      #     dotnet restore
+      #     dotnet build
 
       # Test the selected project
-      - name: Run unit tests on the main project
-        working-directory: ${{ env.PROJECT_PATH }}
-        run: dotnet test --no-restore --no-build ${{ env.PROJECT_NAME }} --logger:"liquid.md;LogFileName=${{github.workspace}}/${{env.TEST_FILENAME}};"
+      # - name: Run unit tests on the main project
+      #   working-directory: ${{ env.PROJECT_PATH }}
+      #   run: dotnet test --no-restore --no-build ${{ env.PROJECT_NAME }} --logger:"liquid.md;LogFileName=${{github.workspace}}/${{env.TEST_FILENAME}};"
       
       # upload test report as build artifact (unfortunately it doesn't display it nicely)
-      - name: Upload test report as build artifact
-        uses: actions/upload-artifact@v3
-        # Use always() to always run this step to publish test results even when there are test failures
-        if: ${{always()}}
-        with:
-          name: 'NUnit test run'
-          path: ${{github.workspace}}/${{env.TEST_FILENAME}}
+      # - name: Upload test report as build artifact
+      #   uses: actions/upload-artifact@v3
+      #   # Use always() to always run this step to publish test results even when there are test failures
+      #   if: ${{always()}}
+      #   with:
+      #     name: 'NUnit test run'
+      #     path: ${{github.workspace}}/${{env.TEST_FILENAME}}
       
       
       
